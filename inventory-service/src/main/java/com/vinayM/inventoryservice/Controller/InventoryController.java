@@ -22,4 +22,8 @@ public class InventoryController {
             return  ResponseEntity.badRequest().build();
         }
     }
+    @GetMapping
+    public ResponseEntity<List<Inventory>> getAllInventory(){
+        return ResponseEntity.ok().body(repo.findAll());
+    }
 }

@@ -8,14 +8,118 @@ services:
             ZOOKEEPER_TICK_TIME: 2000
     kafka:
         image: confluentinc/cp-kafka:latest
-        container_name: broker
+        container_name: kafka
         ports:
             - "9092:9092"
         depends_on:
             - zookeeper
         environment:
-            KAFKA_BROKER_ID: 1
+            KAFKA_kafka_ID: 1
             KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
             KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    db:
+        image: mysql
+        container_name: db
+        ports:
+            - "3307:3306"
+        volumes:
+            - ./mysql-db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: mysql
+    zipkin:
+        image: openzipkin/zipkin
+        container_name: zipkin
+        ports:
+            - "9411:9411"
+
+    ## Eureka Server
+    discovery-server:
+        image: vinaym404/discovery-server
+        container_name: discovery-server
+        ports:
+            - "8761:8761"
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+        depends_on:
+            - zipkin
+
+    api-gateway:
+        image: vinaym404/api-gateway
+        container_name: api-gateway
+        ports:
+            - "8282:8282"
+        expose:
+            - "8282"
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY= TRACE
+            - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka
+        depends_on:
+            - zipkin
+            - discovery-server
+
+    ## Product-Service Docker Compose Config
+    product-service:
+        container_name: product-service
+        image: vinaym404/product-service
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - SPRING_DATASOURCE_URL= jdbc:mysql://db/mysql
+            - SPRING_DATASOURCE_USERNAME=root
+            - SPRING_DATASOURCE_PASSWORD=root
+            - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka
+        depends_on:
+            - db
+            - discovery-server
+            - api-gateway
+
+    ## Order-Service Docker Compose Config
+    order-service:
+        container_name: order-service
+        image: vinaym404/order-service
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - SPRING_DATASOURCE_URL= jdbc:mysql://db/mysql
+            - SPRING_DATASOURCE_USERNAME=root
+            - SPRING_DATASOURCE_PASSWORD=root
+            - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka
+            - spring.kafka.bootstrap-servers=kafka:29092
+        depends_on:
+            - db
+            - kafka
+            - zipkin
+            - discovery-server
+            - api-gateway
+
+    ## Inventory-Service Docker Compose Config
+    inventory-service:
+        container_name: inventory-service
+        image: vinaym404/inventory-service
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - SPRING_DATASOURCE_URL=jdbc:mysql://db/mysql
+            - SPRING_DATASOURCE_USERNAME=root
+            - SPRING_DATASOURCE_PASSWORD=root
+            - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka
+        depends_on:
+            - db
+            - discovery-server
+            - api-gateway
+
+    ## Notification-Service Docker Compose Config
+    notification-service:
+        container_name: notification-service
+        image: vinaym404/notification-service
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+            - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka
+            - spring.kafka.bootstrap-servers=kafka:29092
+        depends_on:
+            - zipkin
+            - kafka
+            - discovery-server
+            - api-gateway
+

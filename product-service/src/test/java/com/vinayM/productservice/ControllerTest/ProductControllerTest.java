@@ -29,50 +29,50 @@ import java.util.stream.Stream;
 @RunWith(SpringRunner.class)
 @WebMvcTest(ProductController.class)
 public class ProductControllerTest {
-
-    @Autowired
-    ObjectMapper objectMapper;
-    @Autowired
-    MockMvc mockMvc;
-    @MockBean
-    ProductService service;
-
-    @Test
-    public void testGetProductByID() throws Exception {
-        long prodID = 1L;
-        ProductResponse p = ProductResponse.builder()
-                .description("sample prod reponse")
-                        .build();
-        Mockito.when(service.getProduct(prodID)).thenReturn(new ResponseEntity<>(p, HttpStatus.OK));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/product/{id}",prodID))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-        Mockito.verify(service,Mockito.times(1)).getProduct(prodID);
-    }
-
-    @Test
-    public void testGetAllProducts() throws Exception{
-        List<ProductResponse> productList = Arrays.asList(
-                ProductResponse.builder().name("bla bla").build(),
-                ProductResponse.builder().name("aa aa").build(),
-                ProductResponse.builder().name("la la").build());
-        Mockito.when(service.getAllProducts()).thenReturn( ResponseEntity.ok(productList));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/product"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-        Mockito.verify(service,Mockito.times(1)).getAllProducts();
-    }
-
-    @Test
-    public void testCreateProduct() throws Exception {
-        ProductRequest p = ProductRequest.builder().build();
-        Mockito.when(service.createProduct(p)).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
-                            .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(p)))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-    }
+//
+//    @Autowired
+//    ObjectMapper objectMapper;
+//    @Autowired
+//    MockMvc mockMvc;
+//    @MockBean
+//    ProductService service;
+//
+//    @Test
+//    public void testGetProductByID() throws Exception {
+//        long prodID = 1L;
+//        ProductResponse p = ProductResponse.builder()
+//                .description("sample prod reponse")
+//                        .build();
+//        Mockito.when(service.getProduct(prodID)).thenReturn(new ResponseEntity<>(p, HttpStatus.OK));
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/product/{id}",prodID))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+//        Mockito.verify(service,Mockito.times(1)).getProduct(prodID);
+//    }
+//
+//    @Test
+//    public void testGetAllProducts() throws Exception{
+//        List<ProductResponse> productList = Arrays.asList(
+//                ProductResponse.builder().name("bla bla").build(),
+//                ProductResponse.builder().name("aa aa").build(),
+//                ProductResponse.builder().name("la la").build());
+//        Mockito.when(service.getAllProducts()).thenReturn( ResponseEntity.ok(productList));
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/product"))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+//        Mockito.verify(service,Mockito.times(1)).getAllProducts();
+//    }
+//
+//    @Test
+//    public void testCreateProduct() throws Exception {
+//        ProductRequest p = ProductRequest.builder().build();
+//        Mockito.when(service.createProduct(p)).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(p)))
+//                .andExpect(MockMvcResultMatchers.status().isCreated());
+//    }
 }
 

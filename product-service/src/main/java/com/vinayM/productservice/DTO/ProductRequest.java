@@ -1,6 +1,5 @@
 package com.vinayM.productservice.DTO;
 
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.math.BigDecimal;

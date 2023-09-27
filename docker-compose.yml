@@ -19,6 +19,16 @@ services:
             KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    mongo:
+        container_name: mongo
+        image: mongo:latest
+        restart: always
+        ports:
+            - "27017:27017"
+        expose:
+            - "27017"
+        volumes:
+            - ./mongo-data:/data/db
     db:
         image: mysql
         container_name: db

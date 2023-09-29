@@ -22,8 +22,5 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductServiceApplicationTests {
 
-	@Test
-	void TestProductController_getAllProducts() {
 
-	}
 }

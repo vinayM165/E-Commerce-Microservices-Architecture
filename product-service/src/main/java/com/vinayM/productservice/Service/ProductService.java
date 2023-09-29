@@ -2,6 +2,7 @@ package com.vinayM.productservice.Service;
 
 import com.vinayM.productservice.DTO.ProductRequest;
 import com.vinayM.productservice.DTO.ProductResponse;
+import com.vinayM.productservice.Event.ProductAddEvent;
 import com.vinayM.productservice.Model.Product;
 import com.vinayM.productservice.Repository.ProductRepository;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,6 +20,8 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
+    @Autowired
+    private KafkaTemplate<String, ProductAddEvent> template;
     private static final Logger log = LoggerFactory.getLogger("ServiceLogs");
     @Autowired
     private ProductRepository repository;
@@ -28,7 +32,12 @@ public class ProductService {
                     .description(productRequest.getDescription())
                     .price(productRequest.getPrice())
                     .quantity(productRequest.getQuantity()).build();
-            repository.save(product);
+            log.info("Product is getting saved....!!!");
+            Product p = repository.save(product);
+            log.info("product is saved!!!");
+            log.info("starting Kafka event productAdd!!!");
+            template.send("ProductAddTopic",new ProductAddEvent(p.getName(),p.getId().toString(),p.getQuantity()));
+            log.info("kafka event message has been sent to topic successfully!");
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e){
             e.printStackTrace();

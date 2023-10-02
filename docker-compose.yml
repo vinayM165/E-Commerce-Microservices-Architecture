@@ -21,12 +21,14 @@ services:
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     mongo:
         container_name: mongo
-        image: mongo
+        image: mongo:latest
         restart: always
         ports:
-            - "27017"
+            - "27017:27017"
         expose:
             - "27017"
+        volumes:
+            - ./mongo-data:/data/db
     db:
         image: mysql
         container_name: db

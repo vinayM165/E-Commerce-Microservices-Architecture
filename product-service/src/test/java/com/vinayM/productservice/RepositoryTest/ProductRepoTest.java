@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
-
 @AutoConfigureTestDatabase(replace=AutoConfigureTestDatabase.Replace.NONE)
 public class ProductRepoTest {
 //    @Autowired

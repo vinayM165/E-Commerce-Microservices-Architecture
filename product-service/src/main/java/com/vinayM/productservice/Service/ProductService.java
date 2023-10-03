@@ -65,7 +65,8 @@ public class ProductService {
     public ResponseEntity<ProductResponse> getProduct(long id){
         try{
             Optional<Product> res = repository.findById(id);
-            return new ResponseEntity<>(mapToProductResponse(res.get()),HttpStatus.OK);
+           return res.map(product -> new ResponseEntity<>(mapToProductResponse(product),HttpStatus.OK))
+                   .orElse(new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE));
         }catch (Exception e){
             e.printStackTrace();
         }

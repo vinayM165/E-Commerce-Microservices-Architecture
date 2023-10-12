@@ -1,5 +1,6 @@
 package com.vinayM.inventoryservice.Controller;
 
+import Service.InventoryService;
 import com.vinayM.inventoryservice.Model.Inventory;
 import com.vinayM.inventoryservice.Repository.InventoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/inventory")
 public class InventoryController {
+
     @Autowired
     InventoryRepo repo;
     @GetMapping("/{sku-code}")
@@ -22,6 +24,7 @@ public class InventoryController {
             return  ResponseEntity.badRequest().build();
         }
     }
+
     @GetMapping
     public ResponseEntity<List<Inventory>> getAllInventory(){
         return ResponseEntity.ok().body(repo.findAll());

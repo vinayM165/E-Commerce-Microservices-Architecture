@@ -1,14 +1,14 @@
 package com.vinayM.inventoryservice.Model;
 
 
-
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.mapping.Constraint;
+
+import javax.persistence.*;
 
 
 @Entity
-@Table
+@Data
+@Table(name = "t_inventory")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,9 +16,8 @@ import org.hibernate.mapping.Constraint;
 @Builder
 public class Inventory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     @Column(unique = true)
     private String skuCode;
-    private Integer quantity;
+    private int quantity;
 }

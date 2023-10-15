@@ -1,7 +1,9 @@
 package com.vinayM.inventoryservice.Controller;
 
+import com.vinayM.inventoryservice.Exception.InventoryNotFoundException;
+import com.vinayM.inventoryservice.Service.InventoryService;
+import com.vinayM.inventoryservice.DTO.InventoryRequest;
 import com.vinayM.inventoryservice.Model.Inventory;
-import com.vinayM.inventoryservice.Repository.InventoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,19 +13,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/inventory")
 public class InventoryController {
+
     @Autowired
-    InventoryRepo repo;
-    @GetMapping("/{sku-code}")
-    public ResponseEntity getQuantity(@PathVariable("sku-code")List<String> skuCode){
-        try {
-            return ResponseEntity.ok(repo.findByskuCodeIn(skuCode));
-        }catch (Exception e){
-            e.printStackTrace();
-            return  ResponseEntity.badRequest().build();
-        }
+    InventoryService service;
+
+    @PostMapping("/getList")
+    public ResponseEntity<?> getQuantity(@RequestBody  List<String> skuCode){
+        return service.getProductBySkuCodes(skuCode);
     }
+    @GetMapping("/{sku-code}")
+    public ResponseEntity<?> getQuantityList(@PathVariable("sku-code") String skuCode){
+        return service.getProductBySkuCode(skuCode);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateProdQuantity(@PathVariable String id, @RequestBody InventoryRequest request) throws InventoryNotFoundException {
+        return service.updateProdQuantity(id,request);
+    }
+
     @GetMapping
     public ResponseEntity<List<Inventory>> getAllInventory(){
-        return ResponseEntity.ok().body(repo.findAll());
+        return service.getAllInventory();
     }
 }

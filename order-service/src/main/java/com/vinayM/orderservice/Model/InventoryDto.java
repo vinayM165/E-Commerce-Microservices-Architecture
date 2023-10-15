@@ -1,7 +1,10 @@
 package com.vinayM.orderservice.Model;
 
-import jakarta.persistence.*;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Entity
 @Table
@@ -14,7 +17,8 @@ import lombok.*;
 public class InventoryDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+   // @JsonDeserialize(using = StringToLongDeserializer.class)
+    private String id;
     private String skuCode;
     private Integer quantity;
 }

@@ -1,7 +1,6 @@
 package com.vinayM.orderservice.Model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
+
 import lombok.*;
 
 import java.util.List;

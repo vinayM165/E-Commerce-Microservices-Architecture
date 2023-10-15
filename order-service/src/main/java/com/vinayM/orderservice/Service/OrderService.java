@@ -1,6 +1,7 @@
 package com.vinayM.orderservice.Service;
 
 import com.vinayM.orderservice.Model.*;
+import com.vinayM.orderservice.OutBoundChannel;
 import com.vinayM.orderservice.Repository.OrderRepository;
 import com.vinayM.orderservice.event.OrderPlacedEvent;
 import org.aspectj.weaver.ast.Or;
@@ -16,17 +17,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+@Transactional
 @Service
 public class OrderService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    OutBoundChannel gateway;
     @Autowired
     OrderRepository repository;
     @Autowired
@@ -40,20 +45,21 @@ public class OrderService {
                     .orderNumber(UUID.randomUUID().toString())
                     .orderLineItemsList(orderList)
                     .build();
-            log.info(orderList.toString());
+            //log.info(orderList.toString());
             orderList.forEach(e -> {
                 String Url = "http://inventory-service/api/inventory/";
-                ParameterizedTypeReference<List<InventoryDto>> typeRef = new ParameterizedTypeReference<List<InventoryDto>>() {
+                ParameterizedTypeReference<InventoryDto> typeRef = new ParameterizedTypeReference<InventoryDto>() {
                 };
-                ResponseEntity<List<InventoryDto>> response = restTemplate.exchange(Url + e.getSkucode(), HttpMethod.GET, null, typeRef);
-                log.info("Inventory Object at 0:" + Objects.requireNonNull(response.getBody()).get(0).getSkuCode());
+                ResponseEntity<InventoryDto> response = restTemplate.exchange(Url + e.getSkucode(), HttpMethod.GET, null, typeRef);
+                //log.info("Inventory Object at 0:" + response.getBody().getSkuCode());
             });
             orderList.forEach(e -> log.info(e.toString()));
             try {
                 if (orderList.stream().allMatch(this::isInStock)) {
                     repository.save(order);
                     try {
-                        template.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
+                        gateway.sendMsgToPubSub("Order has been placed!!!");
+                        //template.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
                         log.info("Message has been send to kafka successfully!!!!");
                     }catch (Exception e){
                         e.printStackTrace();
@@ -95,11 +101,11 @@ public class OrderService {
 
     public boolean isInStock(OrderLineItems item) throws IndexOutOfBoundsException{
             String Url = "http://inventory-service/api/inventory/";
-            ParameterizedTypeReference<List<InventoryDto>> typeRef = new ParameterizedTypeReference<List<InventoryDto>>() {
+            ParameterizedTypeReference<InventoryDto> typeRef = new ParameterizedTypeReference<InventoryDto>() {
             };
-            ResponseEntity<List<InventoryDto>> response = restTemplate.exchange(Url + item.getSkucode(), HttpMethod.GET, null, typeRef);
-            log.info(String.valueOf(response.getBody().get(0).getQuantity()));
+            ResponseEntity<InventoryDto> response = restTemplate.exchange(Url + item.getSkucode(), HttpMethod.GET, null, typeRef);
+            log.info(String.valueOf(response.getBody().getQuantity()));
             log.info("order quantity : " +item.getQuantity());
-            return item.getQuantity()<Objects.requireNonNull(response.getBody()).get(0).getQuantity();
+            return item.getQuantity()<(response.getBody()).getQuantity();
     }
 }

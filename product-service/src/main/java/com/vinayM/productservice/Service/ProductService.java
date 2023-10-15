@@ -3,7 +3,9 @@ package com.vinayM.productservice.Service;
 import com.vinayM.productservice.DTO.ProductRequest;
 import com.vinayM.productservice.DTO.ProductResponse;
 import com.vinayM.productservice.Event.ProductAddEvent;
+import com.vinayM.productservice.JsonConverter;
 import com.vinayM.productservice.Model.Product;
+import com.vinayM.productservice.OutBoundChannel;
 import com.vinayM.productservice.Repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.converter.JsonMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,6 +23,8 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
+    @Autowired
+    private OutBoundChannel channel;
     @Autowired
     private KafkaTemplate<String, ProductAddEvent> template;
     private static final Logger log = LoggerFactory.getLogger("ServiceLogs");
@@ -36,8 +41,14 @@ public class ProductService {
             Product p = repository.save(product);
             log.info("product is saved!!!");
             log.info("starting Kafka event productAdd!!!");
-            template.send("ProductAddTopic",new ProductAddEvent(p.getName(),p.getId().toString(),p.getQuantity()));
-            log.info("kafka event message has been sent to topic successfully!");
+            log.info("product received after saving to dB" + " : " + p.toString());
+            ProductAddEvent event = new ProductAddEvent(p.getId(),p.getName(),p.getQuantity());
+            log.info("product event created" + " : " + event.toString());
+            String json = JsonConverter.convertObjectToJson(event);
+            log.info("product event json string" + " : " + json);
+            channel.sendMsgToPubSub(json);
+            //template.send("ProductAddTopic",new ProductAddEvent(p.getName(),p.getId().toString(),p.getQuantity()));
+            log.info("pubsub event message has been sent to topic successfully!");
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e){
             e.printStackTrace();

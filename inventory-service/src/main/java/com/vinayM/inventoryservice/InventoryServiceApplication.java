@@ -3,6 +3,7 @@ package com.vinayM.inventoryservice;
 import com.google.cloud.spring.pubsub.core.PubSubTemplate;
 import com.google.cloud.spring.pubsub.integration.inbound.PubSubInboundChannelAdapter;
 import com.vinayM.inventoryservice.Event.ProductAddEvent;
+import com.vinayM.inventoryservice.Exception.DuplicateInventoryException;
 import com.vinayM.inventoryservice.Model.Inventory;
 import com.vinayM.inventoryservice.Repository.InventoryRepo;
 import org.slf4j.Logger;
@@ -28,12 +29,12 @@ import java.sql.SQLSyntaxErrorException;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-
 public class InventoryServiceApplication {
 	private Logger log = LoggerFactory.getLogger("InventoryLogs");
 
 	@Autowired
 	InventoryRepo repo;
+
 	public static void main(String[] args) {
 		SpringApplication.run(InventoryServiceApplication.class, args);
 	}
@@ -67,26 +68,28 @@ public class InventoryServiceApplication {
 	}
 
 	@ServiceActivator(inputChannel = "inputChannel")
-	public void receiveMessage(String payload)  {
+	public void receiveMessage(String payload) throws DuplicateInventoryException {
 		ProductAddEvent event = null;
-		try{
-			 event = JsonConverter.convertJsonToObject(payload,ProductAddEvent.class);
-			 log.info("Received Event : "+event.toString());
-				repo.save(Inventory.builder()
-						.skuCode(event.getProduct_name())
-						.quantity(event.getProd_quantity())
-						.id((event.getProduct_id()))
-						.build());
-				log.info("Inventory has been added successfully!!!");
-		 }catch (NumberFormatException e){
-            assert event != null;
-            log.info(String.valueOf(new BigInteger(event.getProduct_id(), 16)) + " is not a valid integer.");
-			 e.printStackTrace();
-		}
-		catch (Exception e) {
+		try {
+			event = JsonConverter.convertJsonToObject(payload, ProductAddEvent.class);
+			log.info("Received Event : " + event.toString());
+			Inventory i = Inventory.builder()
+					.skuCode(event.getProduct_name())
+					.quantity(event.getProd_quantity())
+					.id((event.getProduct_id()))
+					.build();
+			if (repo.findById(i.getId()).isPresent())
+				throw new DuplicateInventoryException("Recived Event that tried to add duplicated data!!!");
+			log.info("Inventory has been added successfully!!!");
+		} catch (NumberFormatException e) {
+			assert event != null;
 			log.info(String.valueOf(new BigInteger(event.getProduct_id(), 16)) + " is not a valid integer.");
 			e.printStackTrace();
+		} catch (Exception e) {
+			if (!(e instanceof DuplicateInventoryException)) {
+				log.info(String.valueOf(new BigInteger(event.getProduct_id(), 16)) + " is not a valid integer.");
+				e.printStackTrace();
+			}
 		}
-
 	}
 }

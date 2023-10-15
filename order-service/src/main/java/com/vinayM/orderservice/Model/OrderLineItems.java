@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-    @Table(name = "t_order_line_items")
+@Table(name = "t_order_line_items")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @ToString
 public class OrderLineItems {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String skucode;
     private BigDecimal price;

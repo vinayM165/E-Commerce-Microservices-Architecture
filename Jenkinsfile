@@ -18,10 +18,11 @@ pipeline {
         }
         stage('Sonar Analysis') {
             steps {
-               withCredentials([usernamePassword(credentialsId: 'sonar-token')]) {
-                         bat "mvn clean install sonar:sonar -D sonar.login=$credentialsId"
+              withSonarQubeEnv(installationName:'Sonar-Qube'){
+                bat "mvn clean sonar:sonar"
+              }
             }
         }
     }
 }
-}
+

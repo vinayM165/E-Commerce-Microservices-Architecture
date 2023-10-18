@@ -26,6 +26,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <sonar.java.binaries>.</sonar.java.binaries>
     </properties>
     <dependencyManagement>
         <dependencies>

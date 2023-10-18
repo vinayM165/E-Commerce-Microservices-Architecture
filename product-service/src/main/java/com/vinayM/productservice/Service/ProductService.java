@@ -30,8 +30,10 @@ import java.util.*;
 
 @Service
 public class ProductService {
+    @Autowired
+    private Random random;
     private final String bucketName ="product_images_bucket_0";
-    private final String objectName = LocalDateTime.now().toString() + String.valueOf(new Random().nextInt(10000)) + ".jpeg";
+    private final String objectName = LocalDateTime.now().toString() + String.valueOf(random.nextInt(10000)) + ".jpeg";
 
     @Autowired
     Storage storage;

@@ -1,7 +1,7 @@
 package com.vinayM.productservice.DTO;
 
 import lombok.*;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 
 @Data
@@ -15,6 +15,6 @@ public class ProductRequest {
     private String description;
     private BigDecimal price;
     private Integer quantity;
-
-
+    private String brand;
+    private MultipartFile image;
 }

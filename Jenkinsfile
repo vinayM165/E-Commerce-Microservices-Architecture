@@ -7,84 +7,124 @@ pipeline {
             }
         }
         stage('Build & test All') {
-            steps {
-                bat "mvn clean package"
-                 bat "mvn test"
-            }
-        }
-        stage('build & test product-service'){
-            steps{
-                dir('product-service'){
-                    bat "mvn clean package"
-                    bat "mvn test"
-                }
-        }
-        }
-        stage('Build & Push Docker Image') {
-            steps {
-                dir('product-service') {
-                    // Authenticate with Docker Hub or registry using Jenkins credentials
-                    withCredentials([usernamePassword(credentialsId: 'ad312487-6758-4462-82e1-7a4b948ecd7e')]) {
-                        // Build the Docker image
-                        bat "docker build -t registry.hub.docker.com/vinaym404/product-service:latest ."
+              steps {
+                  parallel(
+                      'Build & test product-service': {
+                          dir('product-service') {
+                              bat "mvn clean package"
+                              bat "mvn test"
+                          }
+                      },
+                      'Build & test order-service': {
+                          dir('order-service') {
+                              bat "mvn clean package"
+                              bat "mvn test"
+                          }
+                      },
+                      'Build & test inventory-service': {
+                          dir('inventory-service') {
+                              bat "mvn clean package"
+                              bat "mvn test"
+                          }
+                      },
+                      'Build & test notification-service': {
+                          dir('notification-service') {
+                              bat "mvn clean package"
+                              bat "mvn test"
+                          }
+                      },
+                      'Build & test api-gateway': {
+                          dir('api-gateway') {
+                              bat "mvn clean package"
+                              bat "mvn test"
+                          }
+                      },
+                      'Build & test discovery-server': {
+                          dir('discovery-server') {
+                              bat "mvn clean package"
+                              bat "mvn test"
+                          }
+                      }
+                  )
+              }
+          }
 
-                        // Log in to Docker Hub or your registry
-                        bat "docker login registry.hub.docker.com/vinaym404"
-
-                        // Push the Docker image to the registry
-                        bat "docker push registry.hub.docker.com/vinaym404/product-service:latest"
+        stage('Build & Push Docker Images') {
+               parallel {
+                   stage('Product Service') {
+                       steps {
+                           dir('product-service') {
+                               withCredentials([usernamePassword(credentialsId: 'ad312487-6758-4462-82e1-7a4b948ecd7e', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                                  bat"docker build -t registry.hub.docker.com/vinaym404/product-service:latest ."
+                                  bat"docker login -u $USERNAME -p $PASSWORD registry.hub.docker.com/vinaym404"
+                                  bat"docker push registry.hub.docker.com/vinaym404/product-service:latest"
+                               }
+                           }
+                       }
+                   }
+                   stage('Order Service') {
+                       steps {
+                           dir('order-service') {
+                               withCredentials([usernamePassword(credentialsId: 'ad312487-6758-4462-82e1-7a4b948ecd7e', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                                  bat"docker build -t registry.hub.docker.com/vinaym404/order-service:latest ."
+                                  bat"docker login -u $USERNAME -p $PASSWORD registry.hub.docker.com/vinaym404"
+                                  bat"docker push registry.hub.docker.com/vinaym404/order-service:latest"
+                               }
+                           }
+                       }
+                   }
+                   stage('Inventory Service') {
+                       steps {
+                           dir('inventory-service') {
+                               withCredentials([usernamePassword(credentialsId: 'ad312487-6758-4462-82e1-7a4b948ecd7e', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                                  bat"docker build -t registry.hub.docker.com/vinaym404/inventory-service:latest ."
+                                  bat"docker login -u $USERNAME -p $PASSWORD registry.hub.docker.com/vinaym404"
+                                  bat"docker push registry.hub.docker.com/vinaym404/inventory-service:latest"
+                               }
+                           }
+                       }
+                   }
+                   stage('Notification Service') {
+                       steps {
+                           dir('notification-service') {
+                               withCredentials([usernamePassword(credentialsId: 'ad312487-6758-4462-82e1-7a4b948ecd7e', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                                  bat"docker build -t registry.hub.docker.com/vinaym404/notification-service:latest ."
+                                  bat"docker login -u $USERNAME -p $PASSWORD registry.hub.docker.com/vinaym404"
+                                  bat"docker push registry.hub.docker.com/vinaym404/notification-service:latest"
+                               }
+                           }
+                       }
+                   }
+                   stage('API Gateway') {
+                       steps {
+                           dir('api-gateway') {
+                               withCredentials([usernamePassword(credentialsId: 'ad312487-6758-4462-82e1-7a4b948ecd7e', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                                  bat"docker build -t registry.hub.docker.com/vinaym404/api-gateway:latest ."
+                                  bat"docker login -u $USERNAME -p $PASSWORD registry.hub.docker.com/vinaym404"
+                                  bat"docker push registry.hub.docker.com/vinaym404/api-gateway:latest"
+                               }
+                           }
+                       }
+                   }
+                   stage('Discovery Server') {
+                       steps {
+                           dir('discovery-server') {
+                               withCredentials([usernamePassword(credentialsId: 'ad312487-6758-4462-82e1-7a4b948ecd7e', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                                  bat"docker build -t registry.hub.docker.com/vinaym404/discovery-server:latest ."
+                                  bat"docker login -u $USERNAME -p $PASSWORD registry.hub.docker.com/vinaym404"
+                                  bat"docker push registry.hub.docker.com/vinaym404/discovery-server:latest"
+                               }
+                           }
+                       }
+                   }
+               }
+        }
+        stage('Sonar Analysis') {
+                steps {
+                    withSonarQubeEnv(installationName: 'Sonar-Qube') {
+                        bat "mvn clean sonar:sonar"
                     }
                 }
             }
         }
-        }
-        stage('build & test order-service'){
-            steps{
-                dir('order-service'){
-                    bat "mvn clean package"
-                    bat "mvn test"
-            }
-        }
-        }
-         stage('build & test inventory-service'){
-            steps{
-                dir('inventory-service'){
-                    bat "mvn clean package"
-                    bat "mvn test"
-                }
-            }
-            }
-          stage('build & test notification-service'){
-             steps{
-                 dir('notification-service'){
-                     bat "mvn clean package"
-                     bat "mvn test"
-                 }
-             }
-             }
-          stage('build & test api-gateway'){
-                 steps{
-                     dir('api-gateway'){
-                         bat "mvn clean package"
-                         bat "mvn test"
-                     }
-                 }
-                 }
-            stage('build & test discovery-server'){
-                   steps{
-                       dir('discovery-server'){
-                           bat "mvn clean package"
-                           bat "mvn test"
-                       }
-                   }
-                   }
-        stage('Sonar Analysis') {
-            steps {
-              withSonarQubeEnv(installationName:'Sonar-Qube'){
-                bat "mvn clean sonar:sonar"
-              }
-            }
-        }
-    }
 }
-

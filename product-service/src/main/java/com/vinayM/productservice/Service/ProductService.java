@@ -138,7 +138,37 @@ public class ProductService {
                 .createdAt(product.getCreatedAt())
                 .build();
     }
+
+    private Product mapToProductFromProductRequest(ProductRequest product){
+        return Product.builder()
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .brand(product.getBrand())
+                .build();
+    }
+
     private boolean checkIfExists(String s){
         return repository.findByName(s).isPresent();
+    }
+
+    public ResponseEntity<?> deleteProduct(ProductRequest request) {
+        try{
+            repository.deleteByNameAndBrand(request.getName(), request.getBrand());
+            return ResponseEntity.ok("Deleted Successfully");
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity<?> updateProduct(ProductRequest request) {
+        try{
+            repository.save(mapToProductFromProductRequest(request));
+            return ResponseEntity.ok("Success");
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

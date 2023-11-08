@@ -80,6 +80,7 @@ public class InventoryServiceApplication {
 					.build();
 			if (repo.findById(i.getId()).isPresent())
 				throw new DuplicateInventoryException("Recived Event that tried to add duplicated data!!!");
+			repo.save(i);
 			log.info("Inventory has been added successfully!!!");
 		} catch (NumberFormatException e) {
 			assert event != null;

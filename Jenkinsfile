@@ -47,7 +47,7 @@ pipeline {
                       }
                   )
               }
-          }
+        }
 
         stage('Build & Push Docker Images') {
                parallel {
@@ -119,12 +119,18 @@ pipeline {
                    }
                }
         }
+
         stage('Sonar Analysis') {
-                steps {
-                    withSonarQubeEnv(installationName: 'Sonar-Qube') {
-                        bat "mvn clean sonar:sonar"
-                    }
-                }
-            }
+             steps {
+                 // Run the 'mvn' command with SonarQube analysis
+                 script {
+                     def sonarToken = 'sqp_8708205c8eb669892d742fc0a938985965870227'
+                     def projectKey = 'ecommerce_springboot_microservices_dev'
+                     def projectName = 'ecommerce_springboot_microservices_dev'
+                     def sonarHostUrl = 'http://localhost:9000'
+                     bat "mvn clean verify sonar:sonar -D sonar.projectKey=${projectKey} -D sonar.projectName='${projectName}' -D sonar.host.url=${sonarHostUrl} -D sonar.login=${sonarToken}"
+                 }
+             }
         }
+    }
 }

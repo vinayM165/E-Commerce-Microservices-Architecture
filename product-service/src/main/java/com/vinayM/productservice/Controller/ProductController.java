@@ -2,6 +2,7 @@ package com.vinayM.productservice.Controller;
 import com.vinayM.productservice.DTO.ProductRequest;
 import com.vinayM.productservice.DTO.ProductResponse;
 import com.vinayM.productservice.Service.ProductService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +39,8 @@ public class ProductController {
         }
     }
     @PostMapping
-    public ResponseEntity createProd(@RequestHeader Map<String, String> headers,
-     @RequestParam("image") MultipartFile image,
+    public ResponseEntity createProd(@NotNull @RequestHeader Map<String, String> headers,
+                                     @RequestParam("image") MultipartFile image,
                                      @RequestParam("name") String name,
                                      @RequestParam("description") String description,
                                      @RequestParam("price") BigDecimal price,
@@ -65,4 +66,16 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     }
+
+    @DeleteMapping()
+    public ResponseEntity<?> deleteEntityWithID(@RequestBody ProductRequest request){
+        return service.deleteProduct(request);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateEntity(@RequestBody  ProductRequest request){
+        return service.updateProduct(request);
+    }
+
+
 }

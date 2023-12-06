@@ -13,7 +13,7 @@ import javax.persistence.Column;
 @AllArgsConstructor
 @Builder
 public class InventoryRequest {
-    private String id;
+    private Long id;
     private String skuCode;
     private int quantity;
 }

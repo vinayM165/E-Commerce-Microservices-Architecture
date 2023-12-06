@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 
 import java.util.*;
@@ -31,8 +32,8 @@ import java.util.*;
 @Service
 public class ProductService {
 
-    private Random random = new Random();
-    private final String bucketName ="product_images_bucket_0";
+    private final SecureRandom random = new SecureRandom();
+    private final static String bucketName ="product_images_bucket_0";
     private final String objectName = LocalDateTime.now().toString() + String.valueOf(random.nextInt(10000)) + ".jpeg";
 
     @Autowired
@@ -131,6 +132,7 @@ public class ProductService {
     private ProductResponse mapToProductResponse(Product product){
         return ProductResponse.builder()
                 .name(product.getName())
+                .quantity(product.getQuantity())
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .brand(product.getBrand())
@@ -138,7 +140,6 @@ public class ProductService {
                 .createdAt(product.getCreatedAt())
                 .build();
     }
-
     private Product mapToProductFromProductRequest(ProductRequest product){
         return Product.builder()
                 .name(product.getName())
@@ -147,12 +148,11 @@ public class ProductService {
                 .brand(product.getBrand())
                 .build();
     }
-
     private boolean checkIfExists(String s){
         return repository.findByName(s).isPresent();
     }
 
-    public ResponseEntity<?> deleteProduct(ProductRequest request) {
+    public ResponseEntity<String> deleteProduct(ProductRequest request) {
         try{
             repository.deleteByNameAndBrand(request.getName(), request.getBrand());
             return ResponseEntity.ok("Deleted Successfully");
@@ -161,8 +161,7 @@ public class ProductService {
             return ResponseEntity.badRequest().build();
         }
     }
-
-    public ResponseEntity<?> updateProduct(ProductRequest request) {
+    public ResponseEntity<String> updateProduct(ProductRequest request) {
         try{
             repository.save(mapToProductFromProductRequest(request));
             return ResponseEntity.ok("Success");

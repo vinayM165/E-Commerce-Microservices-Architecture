@@ -1,107 +1,176 @@
 package com.vinayM.productservice.ControllerTest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinayM.productservice.Controller.ProductController;
 import com.vinayM.productservice.DTO.ProductRequest;
 import com.vinayM.productservice.DTO.ProductResponse;
+import com.vinayM.productservice.Repository.ProductRepository;
 import com.vinayM.productservice.Service.ProductService;
+import kotlin.jvm.internal.unsafe.MonitorKt;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
 public class ProductControllerTest {
 
-    @InjectMocks
-    private ProductController productController;
+  @Autowired
+  MockMvc mockMvc;
 
-    @Mock
-    private ProductService productService;
+  @MockBean
+  ProductService service;
 
-    @Before
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-    }
+  @InjectMocks
+  ProductController productController;
 
-    @Test
-    public void testGetAllProducts() {
-        // Mocking the service response
-        List<ProductResponse> products = Arrays.asList(new ProductResponse(), new ProductResponse());
-        when(productService.getAllProducts()).thenReturn(new ResponseEntity<>(products, HttpStatus.OK));
+  @Test
+    public void testGetAllProducts() throws Exception{
+      ProductResponse rp = ProductResponse.builder()
+              .name("p1")
+              .price(new BigDecimal(100))
+              .brand("cham-chung")
+              .description("test")
+              .quantity(12)
+              .build();
+      ProductResponse rp1 = ProductResponse.builder()
+              .name("p2")
+              .price(new BigDecimal(200))
+              .brand("Phenovo")
+              .description("test")
+              .quantity(121)
+              .build();
+      List<ProductResponse> rLi = new ArrayList<>();
+      rLi.add(rp);
+      rLi.add(rp1);
+        when(service.getAllProducts()).thenReturn(ResponseEntity.ok(rLi));
+      mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8282/api/product")
+              .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+              .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("p1"))
+              .andExpect(MockMvcResultMatchers.jsonPath("$[0].brand").value("cham-chung"))
+              .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value("test"))
+              .andExpect(MockMvcResultMatchers.jsonPath("$[0].quantity").value(12));
+  }
+  @Test
+  public void testGetProduct() throws Exception{
+    String id = "id1";
+    ProductResponse pr = ProductResponse.builder()
+            .name("demo")
+            .quantity(12)
+            .brand("brand")
+            .description("demodes")
+            .price(new BigDecimal(12))
+            .build();
+    when(service.getProduct(id)).thenReturn(ResponseEntity.ok(pr));
+    mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8282/api/product/{id}",id)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("demo"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(12))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.brand").value("brand"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("demodes"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(12));
+  }
+  @Test
+  public void testCreateProd() throws Exception{
+    Map<String, String> headers = new HashMap<>();
+    headers.put("header1", "value1");
+    headers.put("header2", "value2");
+    MockMultipartFile image = new MockMultipartFile("image", "image.jpg", "image/jpeg", new byte[0]);
+    String name = "Product Name";
+    String description = "Product Description";
+    BigDecimal price = new BigDecimal("10.00");
+    Integer quantity = 5;
+    String brand = "Product Brand";
+    ProductRequest pr = ProductRequest.builder()
+                    .name(name)
+                            .quantity(quantity)
+                                    .price(price)
+                                            .description(description)
+                                                    .brand(brand).build();
+    when(service.createProduct(pr)).thenReturn(new ResponseEntity(HttpStatus.CREATED));
+    mockMvc.perform(MockMvcRequestBuilders.multipart("http://localhost:8282/api/product")
+                    .file(image)
+                    .param("name", name)
+                    .param("description", description)
+                    .param("price", price.toString())
+                    .param("quantity", quantity.toString())
+                    .param("brand", brand))
+            .andExpect(status().isOk())
+            .andExpect(result -> {
+      MvcResult mvcResult = result;
+      System.out.println("Response Body: " + mvcResult.getResponse().getContentAsString());
+    }).andDo(MockMvcResultHandlers.print());;
+  }
 
-        // Calling the controller method
-        ResponseEntity<List<ProductResponse>> response = productController.getAllProducts();
 
-        // Verify the service method was called
-        verify(productService, times(1)).getAllProducts();
+  @Test
+  public void testDeleteEntityWithID() throws Exception {
+    // Create a ProductRequest for testing
+    ProductRequest request = new ProductRequest();
+    // Set necessary fields in the request
 
-        // Verify the response
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(products, response.getBody());
-    }
+    // Mock the service method to return a ResponseEntity
+    when(service.deleteProduct(request)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-    @Test
-    public void testGetProduct() {
-        // Mocking the service response
-        String productId = "123";
-        ProductResponse product = new ProductResponse();
-        when(productService.getProduct(productId)).thenReturn(new ResponseEntity<>(product, HttpStatus.OK));
+    // Perform the DELETE request using MockMvc
+    mockMvc.perform(MockMvcRequestBuilders.delete("/api/product")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new ObjectMapper().writeValueAsString(request)))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(result -> {
+              MvcResult mvcResult = result;
+              System.out.println("Response Body: " + mvcResult.getResponse().getContentAsString());
+              // Add additional assertions if needed
+            });
+  }
+  @Test
+  public void testUpdateEntity() throws Exception {
+    // Create a ProductRequest for testing
+    ProductRequest request = new ProductRequest();
+    // Set necessary fields in the request
 
-        // Calling the controller method
-        ResponseEntity<ProductResponse> response = productController.getProduct(productId);
+    // Mock the service method to return a ResponseEntity
+    when(service.updateProduct(request)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-        // Verify the service method was called
-        verify(productService, times(1)).getProduct(productId);
-
-        // Verify the response
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(product, response.getBody());
-    }
-
-    @Test
-    public void testCreateProduct() {
-        // Mocking the service response
-        MultipartFile image = new MockMultipartFile("image", new byte[0]);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Header1", "Value1");
-        headers.put("Header2", "Value2");
-        String name = "Product Name";
-        String description = "Product Description";
-        BigDecimal price = new BigDecimal("19.99");
-        Integer quantity = 10;
-        String brand = "Product Brand";
-
-        ProductRequest productRequest = ProductRequest.builder()
-                .image(image)
-                .brand(brand)
-                .price(price)
-                .description(description)
-                .name(name)
-                .quantity(quantity)
-                .build();
-
-        when(productService.createProduct(productRequest)).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
-
-        // Calling the controller method
-        ResponseEntity response = productController.createProd(headers, image, name, description, price, quantity, brand);
-
-        // Verify the service method was called
-        verify(productService, times(1)).createProduct(productRequest);
-
-        // Verify the response
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    }
+    // Perform the PUT request using MockMvc
+    mockMvc.perform(MockMvcRequestBuilders.put("/api/product")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new ObjectMapper().writeValueAsString(request)))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(result -> {
+              MvcResult mvcResult = result;
+              System.out.println("Response Body: " + mvcResult.getResponse().getContentAsString());
+              // Add additional assertions if needed
+            });
+  }
 }

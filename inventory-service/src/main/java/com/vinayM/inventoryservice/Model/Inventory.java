@@ -4,6 +4,7 @@ package com.vinayM.inventoryservice.Model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -16,8 +17,11 @@ import javax.persistence.*;
 @Builder
 public class Inventory {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(unique = true)
     private String skuCode;
     private int quantity;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

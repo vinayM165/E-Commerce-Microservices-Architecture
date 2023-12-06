@@ -18,15 +18,17 @@ public class InventoryController {
     InventoryService service;
 
     @PostMapping("/getList")
-    public ResponseEntity<?> getQuantity(@RequestBody  List<String> skuCode){
+    //API call to get Inventory DTO with Inventory Details for list of skuCodes
+    public ResponseEntity<List<Inventory>> getInventoryListBySkuCode(@RequestBody  List<String> skuCode){
         return service.getProductBySkuCodes(skuCode);
     }
+    //API call to get Inventory DTO list with Inventory Details for skuCode
     @GetMapping("/{sku-code}")
-    public ResponseEntity<?> getQuantityList(@PathVariable("sku-code") String skuCode){
+    public ResponseEntity<Inventory> getQuantityList(@PathVariable("sku-code") String skuCode){
         return service.getProductBySkuCode(skuCode);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProdQuantity(@PathVariable String id, @RequestBody InventoryRequest request) throws InventoryNotFoundException {
+    public ResponseEntity<String> updateProdQuantity(@PathVariable Long id, @RequestBody InventoryRequest request) throws InventoryNotFoundException {
         return service.updateProdQuantity(id,request);
     }
 

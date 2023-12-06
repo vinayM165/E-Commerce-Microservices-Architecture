@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +34,10 @@ public class InventoryServiceTest {
     // Successfully update product quantity
     @Test
     public void test_update_product_quantity() throws InventoryNotFoundException {
-        // Given
-        String id = "123";
-        InventoryRequest request = new InventoryRequest("123", "SKU123", 10);
-        Inventory inventory = new Inventory("123", "SKU123", 10);
+        // Give
+        Long id = 123L;
+        InventoryRequest request = new InventoryRequest(123L, "SKU123", 10);
+        Inventory inventory = new Inventory(123L, "SKU123", 10, LocalDateTime.now(),LocalDateTime.now());
         when(repo.findById(id)).thenReturn(Optional.of(inventory));
 
         // When
@@ -55,8 +56,8 @@ public class InventoryServiceTest {
         // Given
         List<String> skuCodes = Arrays.asList("SKU123", "SKU456");
         List<Inventory> inventories = Arrays.asList(
-                new Inventory("123", "SKU123", 10),
-                new Inventory("456", "SKU456", 5)
+                new Inventory(123L, "SKU123", 10, LocalDateTime.now(),LocalDateTime.now()),
+                new Inventory(456L, "SKU456", 5, LocalDateTime.now(),LocalDateTime.now())
         );
         when(repo.findByskuCodeIn(skuCodes)).thenReturn(inventories);
 
@@ -74,8 +75,8 @@ public class InventoryServiceTest {
     public void test_get_all_inventory() {
         // Given
         List<Inventory> inventories = Arrays.asList(
-                new Inventory("123", "SKU123", 10),
-                new Inventory("456", "SKU456", 5)
+                new Inventory(123L, "SKU123", 10, LocalDateTime.now(),LocalDateTime.now()),
+                new Inventory(456L, "SKU456", 5, LocalDateTime.now(),LocalDateTime.now())
         );
         when(repo.findAll()).thenReturn(inventories);
 
@@ -93,7 +94,7 @@ public class InventoryServiceTest {
     public void test_get_product_by_sku_code() {
         // Given
         String skuCode = "SKU123";
-        Inventory inventory = new Inventory("123", "SKU123", 10);
+        Inventory inventory = new Inventory(123L, "SKU123", 10, LocalDateTime.now(),LocalDateTime.now());
         when(repo.findByskuCode(skuCode)).thenReturn(inventory);
 
         // When
@@ -109,12 +110,12 @@ public class InventoryServiceTest {
     @Test
     public void test_inventory_not_found_for_given_id() {
         // Given
-        String id = "123";
+        Long id = 123L;
         when(repo.findById(id)).thenReturn(Optional.empty());
 
         // When
         try {
-            inventoryService.updateProdQuantity(id, new InventoryRequest("123", "SKU123", 10));
+            inventoryService.updateProdQuantity(id, new InventoryRequest(123L, "SKU123", 10));
             fail("Expected InventoryNotFoundException to be thrown");
         } catch (InventoryNotFoundException e) {
             // Then
@@ -160,16 +161,16 @@ public class InventoryServiceTest {
     @Test
     public void test_null_input_in_updateProdQuantity_method() {
         // Given
-        String id = "123";
+        Long id = 123L;
         when(repo.findById(id)).thenReturn(Optional.empty());
 
         // When
         try {
             inventoryService.updateProdQuantity(id, null);
             fail("Expected NullPointerException to be thrown");
-        } catch (NullPointerException | InventoryNotFoundException e) {
+        } catch (InventoryNotFoundException e) {
             // Then
-            assertEquals("request is marked non-null but is null", e.getMessage());
+            assertEquals("Inventory for this id is not found in record.", e.getMessage());
             verify(repo, times(1)).findById(id);
             verify(repo, never()).save(any(Inventory.class));
         }

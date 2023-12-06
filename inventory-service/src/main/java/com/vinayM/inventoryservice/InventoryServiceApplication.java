@@ -26,6 +26,7 @@ import java.math.BigInteger;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -72,23 +73,24 @@ public class InventoryServiceApplication {
 		ProductAddEvent event = null;
 		try {
 			event = JsonConverter.convertJsonToObject(payload, ProductAddEvent.class);
-			log.info("Received Event : " + event.toString());
+			log.info(String.format("Received Event :   %s",event.toString()));
 			Inventory i = Inventory.builder()
 					.skuCode(event.getProduct_name())
 					.quantity(event.getProd_quantity())
-					.id((event.getProduct_id()))
+					.createdAt(LocalDateTime.now())
+					.updatedAt(LocalDateTime.now())
 					.build();
-			if (repo.findById(i.getId()).isPresent())
-				throw new DuplicateInventoryException("Recived Event that tried to add duplicated data!!!");
+			if (repo.existsBySkuCode(i.getSkuCode()))
+				throw new DuplicateInventoryException("Received Event that tried to add duplicated data!!!");
 			repo.save(i);
 			log.info("Inventory has been added successfully!!!");
 		} catch (NumberFormatException e) {
 			assert event != null;
-			log.info(String.valueOf(new BigInteger(event.getProduct_id(), 16)) + " is not a valid integer.");
+			log.info(new BigInteger(event.getProduct_id(), 16) + " is not a valid integer.");
 			e.printStackTrace();
 		} catch (Exception e) {
 			if (!(e instanceof DuplicateInventoryException)) {
-				log.info(String.valueOf(new BigInteger(event.getProduct_id(), 16)) + " is not a valid integer.");
+				log.info(new BigInteger(event.getProduct_id(), 16)+ " is not a valid integer.");
 				e.printStackTrace();
 			}
 		}

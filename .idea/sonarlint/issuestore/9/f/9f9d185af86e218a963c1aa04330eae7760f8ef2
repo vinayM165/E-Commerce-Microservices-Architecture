@@ -1,0 +1,19 @@
+
+ˆ	java:S112U"FDefine and throw a dedicated exception instead of using a generic one.(ì½š¢8ÀÅ1J$098d1393-9be5-48ce-b0bf-66472752507b
+}
+java:S11414"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ8„ÀÅ1J$5092ed7b-3655-4c11-b262-61a5c8652944
+˜	java:S1172"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(˜¿©†úÿÿÿÿ8…ÀÅ1J$0ddfafed-684c-47c4-bf3d-e28c16443244
+g
+java:S2629O"$Invoke method(s) only conditionally.(á²û‹8‘ÀÅ1J$3e217859-7b69-479f-83e1-15656ca7568f
+¡	java:S115$"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(‹‘Á‹ıÿÿÿÿ8œÀÅ1J$692ded07-47af-4202-b49c-a58b7a5d2861
+_
+java:S6813'"BRemove this field injection and use constructor injection instead.(êæÄŞ8ÀªßÁÅ1
+_
+java:S6813)"BRemove this field injection and use constructor injection instead.(êæÄŞ8ÀªßÁÅ1
+_
+java:S6813+"BRemove this field injection and use constructor injection instead.(êæÄŞ8ÁªßÁÅ1
+_
+java:S6813."BRemove this field injection and use constructor injection instead.(êæÄŞ8ÁªßÁÅ1
+
+java:S1124$"EReorder the modifiers to comply with the Java Language Specification.(‹‘Á‹ıÿÿÿÿ8©ÀÅ1J$b2da3443-9b2f-4995-9c41-d3a2ca5980d2
+~	java:S125Q"<This block of commented-out lines of code should be removed.(Ëš‚Ò8ÈÀÅ1J$3eff01e7-5b1e-4d84-9782-fdbf8d5b084a

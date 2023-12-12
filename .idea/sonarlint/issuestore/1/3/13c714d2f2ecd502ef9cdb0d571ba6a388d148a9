@@ -1,0 +1,6 @@
+
+|
+java:S1488"ZImmediately return this expression instead of assigning it to the temporary variable "li".(Ì¿®ëþÿÿÿÿ8´Ó»æÅ1
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(çý¦§ÿÿÿÿÿ8Ï’³æÅ1
+_
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄÞ8Ð’³æÅ1

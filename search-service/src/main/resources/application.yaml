@@ -5,3 +5,5 @@ spring:
             cluster-nodes: localhost:9200
             repositories:
                 enabled: true
+server:
+    port: 6767

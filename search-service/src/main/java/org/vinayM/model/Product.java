@@ -4,8 +4,9 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -20,7 +21,7 @@ public class Product {
     private BigDecimal price;
     private Integer quantity;
     private String brand;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
     private String imageUrl;
 }

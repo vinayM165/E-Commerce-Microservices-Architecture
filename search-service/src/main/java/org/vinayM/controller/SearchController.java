@@ -26,4 +26,9 @@ public class SearchController {
         List<Product> li  = service.findByName(name);
         return ResponseEntity.ok(li);
     }
+
+    @GetMapping("/fuzz")
+    public ResponseEntity fuzzSearch(String term){
+        return ResponseEntity.ok(service.fuzzSearch(term));
+    }
 }

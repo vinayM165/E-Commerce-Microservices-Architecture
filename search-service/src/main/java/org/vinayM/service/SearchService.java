@@ -36,4 +36,8 @@ public class SearchService {
     public List<Product> findByName(String name) {
         return repository.findByName(name);
     }
+
+    public List<Product> fuzzSearch(String term) {
+        return repository.findByNameFuzzy(term);
+    }
 }

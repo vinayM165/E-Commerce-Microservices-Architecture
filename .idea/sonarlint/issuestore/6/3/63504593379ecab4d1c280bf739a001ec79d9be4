@@ -1,0 +1,16 @@
+
+v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¢Ø²8œ÷£ãÆ1
+\
+java:S1854/"?Remove this useless assignment to local variable "credentials".(ÿúï–8¢÷£ãÆ1
+M
+java:S1481/"0Remove this unused "credentials" local variable.(ÿúï–8£÷£ãÆ1
+b
+java:S1612<"@Replace this lambda with method reference 'String::toUpperCase'.(×˜Úµüÿÿÿÿ8¦÷£ãÆ1
+e
+java:S1128"HRemove this unused import 'org.apache.beam.model.pipeline.v1.RunnerApi'.(˜õÒë8Ë‡ãåÆ1
+z
+java:S1128"]Remove this unused import 'org.apache.beam.runners.dataflow.options.DataflowPipelineOptions'.(²šü‹8Ë‡ãåÆ1
+l
+java:S1128"ORemove this unused import 'org.springframework.beans.factory.annotation.Value'.(ìø›8ãÓíåÆ1
+U
+java:S1128"3Remove this unused import 'java.nio.channels.Pipe'.(èØ¯˜ûÿÿÿÿ8Ë‡ãåÆ1

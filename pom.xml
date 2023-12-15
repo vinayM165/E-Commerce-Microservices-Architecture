@@ -21,6 +21,7 @@
         <module>api-gateway</module>
         <module>notification-service</module>
         <module>search-service</module>
+        <module>dataflow-pipeline</module>
     </modules>
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

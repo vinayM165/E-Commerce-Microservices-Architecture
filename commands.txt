@@ -1,0 +1,1 @@
+Running Dataflow pipeline:  mvn compile exec:java -D exec.mainClass=org.vinayM.Main -D exec.args="--runner=DataflowRunner --project=ProjextX30794 --region=us-east1"

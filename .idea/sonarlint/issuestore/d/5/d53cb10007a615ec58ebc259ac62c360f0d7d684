@@ -1,0 +1,26 @@
+
+v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¢Ø²8ŠÈŞïÅ1
+n
+java:S1128"QRemove this unused import 'co.elastic.clients.elasticsearch.ElasticsearchClient'.(À×©é8ÏƒßïÅ1
+l
+java:S1128"ORemove this unused import 'co.elastic.clients.json.jackson.JacksonJsonpMapper'.(·—œ¼8ÏƒßïÅ1
+m
+java:S1128"PRemove this unused import 'co.elastic.clients.transport.ElasticsearchTransport'.(´ Ïª8ÏƒßïÅ1
+u
+java:S1128"YRemove this unused import 'co.elastic.clients.transport.rest_client.RestClientTransport'.(§ÚÒ8ÏƒßïÅ1
+R
+java:S1128"5Remove this unused import 'org.apache.http.HttpHost'.(õÑ‰¯8ÏƒßïÅ1
+\
+java:S1128"@Remove this unused import 'org.elasticsearch.client.RestClient'.(ìşÇT8ÏƒßïÅ1
+k
+java:S1128	"IRemove this unused import 'org.elasticsearch.client.RestHighLevelClient'.(û˜Ò›úÿÿÿÿ8­ÔğÅ1
+e
+java:S1128"HRemove this unused import 'org.springframework.context.annotation.Bean'.(‚î‰Ş8­ÔğÅ1
+{
+java:S1128"^Remove this unused import 'org.springframework.data.elasticsearch.client.ClientConfiguration'.(©ßİç8­ÔğÅ1
+x
+java:S1128"VRemove this unused import 'org.springframework.data.elasticsearch.client.RestClients'.(¥ÏšËøÿÿÿÿ8­ÔğÅ1
+}
+java:S1128"`Remove this unused import 'org.springframework.data.elasticsearch.core.ElasticsearchOperations'.(ïæô‡8ÏƒßïÅ1
+„
+java:S1128"bRemove this unused import 'org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate'.(…ÌÊ‚şÿÿÿÿ8ĞƒßïÅ1

@@ -1,0 +1,40 @@
+
+[	java:S112V"FDefine and throw a dedicated exception instead of using a generic one.(ì½š¢
+E
+java:S37400"/Provide the parametrized type for this generic.(ñ¸›“
+P
+java:S11414"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+k	java:S1172"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(˜¿©†úÿÿÿÿ
+w
+java:S2629L"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(Ù”åíøÿÿÿÿ
+r
+java:S2629N"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(•ºû¤
+M
+java:S2629P"7Use the built-in formatting to construct this argument.(»ÊûÚ
+M
+java:S2629{"7Use the built-in formatting to construct this argument.(ğã£Ç
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÍÔõ
+t	java:S115$"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(‹‘Á‹ıÿÿÿÿ
+X
+java:S6813'"BRemove this field injection and use constructor injection instead.(êæÄŞ
+X
+java:S6813)"BRemove this field injection and use constructor injection instead.(êæÄŞ
+X
+java:S6813+"BRemove this field injection and use constructor injection instead.(êæÄŞ
+X
+java:S6813."BRemove this field injection and use constructor injection instead.(êæÄŞ
+`
+java:S1124$"EReorder the modifiers to comply with the Java Language Specification.(‹‘Á‹ıÿÿÿÿ
+T
+java:S18545"9Remove this useless assignment to local variable "image".(ñĞŸêıÿÿÿÿ
+E
+java:S14815"*Remove this unused "image" local variable.(ñĞŸêıÿÿÿÿ
+\
+java:S3457L"AFormat specifiers should be used instead of string concatenation.(Ù”åíøÿÿÿÿ
+W
+java:S3457N"AFormat specifiers should be used instead of string concatenation.(•ºû¤
+W
+java:S3457P"AFormat specifiers should be used instead of string concatenation.(»ÊûÚ
+Q	java:S125R"<This block of commented-out lines of code should be removed.(Ëš‚Ò
+W
+java:S3457{"AFormat specifiers should be used instead of string concatenation.(ğã£Ç

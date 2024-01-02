@@ -1,0 +1,30 @@
+
+|
+java:S1488"ZImmediately return this expression instead of assigning it to the temporary variable "li".(Ì¿®ëşÿÿÿÿ8÷£˜Æ1
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(çı¦§ÿÿÿÿÿ8ù£˜Æ1
+>
+java:S1170"!Make this final field static too.(˜8ı£˜Æ1
+_
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8ş£˜Æ1
+_
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8ş£˜Æ1
+X
+java:S1874";Remove this use of "RestHighLevelClient"; it is deprecated.(±úÂÀ8ÿ£˜Æ1
+o
+java:S6204 "RReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()'(ª™¨¹8¤˜Æ1
+_
+java:S1128"BRemove this unused import 'co.elastic.clients.elasticsearch.core'.(Àí¬Â8ÏÈÊÆ1
+o
+java:S1128"MRemove this unused import 'co.elastic.clients.elasticsearch.core.search.Hit'.(êÊ¥üÿÿÿÿ8ÏÈÊÆ1
+h
+java:S1128"FRemove this unused import 'org.springframework.stereotype.Repository'.(¦ıÍıüÿÿÿÿ8ĞÈÊÆ1
+R
+java:S1128"0Remove this unused import 'java.io.IOException'.(ªº»Úıÿÿÿÿ8ĞÈÊÆ1
+M
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8ĞÈÊÆ1
+\
+java:S1128"?Remove this unused import 'java.util.Collections.singletonMap'.(§Áºş8ĞÈÊÆ1
+}
+java:S1128"[Remove this unused import 'org.springframework.expression.spel.SpelCompilerMode.IMMEDIATE'.(­Ã¬Éıÿÿÿÿ8ĞÈÊÆ1
+J
+java:S1068"-Remove this unused "indexName" private field.(˜8„¤˜Æ1

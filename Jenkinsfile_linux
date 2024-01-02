@@ -123,10 +123,10 @@ pipeline {
         stage('Sonar Analysis') {
             steps {
                 script {
-                    def sonarToken = 'sqa_29e048a3d4230a17fb52c7c7d0f209dbbc7b5cee'
-                    def projectKey = 'ecommerce_springboot_microservices'
-                    def projectName = 'ecommerce_springboot_microservices'
-                    def sonarHostUrl = 'http://34.126.116.107:9000/'
+                    def sonarToken = 'sqp_8708205c8eb669892d742fc0a938985965870227'
+                    def projectKey = 'ecommerce_springboot_microservices_dev'
+                    def projectName = 'ecommerce_springboot_microservices_dev'
+                    def sonarHostUrl = 'http://localhost:9000'
                     sh "mvn clean verify sonar:sonar -D sonar.projectKey=${projectKey} -D sonar.projectName='${projectName}' -D sonar.host.url=${sonarHostUrl} -D sonar.login=${sonarToken}"
                 }
             }

@@ -1,0 +1,12 @@
+
+v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¢Ø²8áîØ¥Ë1
+Z
+java:S1612."=Replace this lambda with method reference 'Document::toJson'.(™î÷Ç8óîØ¥Ë1
+e
+java:S1128"HRemove this unused import 'org.apache.beam.sdk.options.PipelineOptions'.(†à­8ÈïÙ¥Ë1
+e
+java:S1128"CRemove this unused import 'org.apache.beam.sdk.values.PCollection'.(„ğÊİøÿÿÿÿ8ÉïÙ¥Ë1
+X
+java:S1128"6Remove this unused import 'javax.swing.text.Document'.(·ßó’şÿÿÿÿ8ÉïÙ¥Ë1
+psecrets:S6694"PMake sure this MongoDB database password gets changed and removed from the code.(ª•Ç8Ø»±Ê1
+psecrets:S6694)"PMake sure this MongoDB database password gets changed and removed from the code.(ª•Ç8ÛÑƒàÊ1

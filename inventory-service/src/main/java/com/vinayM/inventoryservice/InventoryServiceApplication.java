@@ -27,6 +27,11 @@ import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -35,6 +40,7 @@ public class InventoryServiceApplication {
 
 	@Autowired
 	InventoryRepo repo;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(InventoryServiceApplication.class, args);
